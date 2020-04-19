@@ -1,0 +1,14 @@
+#Server Port Cfg
+server:
+  port: 3333
+  
+#Application Name cfg
+spring:
+  application:
+    name: hi-service
+    
+#Client Cfg
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:1111/eureka/

@@ -1,0 +1,9 @@
+#Server Port Cfg
+server:
+  port: 1111
+  
+#Client Cfg    
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
