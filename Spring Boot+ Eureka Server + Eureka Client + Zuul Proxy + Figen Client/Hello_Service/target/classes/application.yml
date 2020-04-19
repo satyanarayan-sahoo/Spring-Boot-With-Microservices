@@ -1,0 +1,14 @@
+#Server Port Cfg
+server:
+  port: 2222
+  
+#Application Name cfg
+spring:
+  application:
+    name: hello-service
+    
+#Client Cfg    
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:1111/eureka/

@@ -1,0 +1,27 @@
+Through Hello
+=============
+Second time onwards when we run like--> Run Configurations -->in VM Arguments we provide -Dserver.port=5555 and run.
+we can run the same eapplication in multiple port like this. -Dserver.port=6666
+-Dserver.port=7777
+
+http://laptop-ss1il408:2222/hello/welcome
+http://laptop-ss1il408:2222/hello/sayHello
+
+Through Hi
+==========
+Second time onwards when we run like--> Run Configurations -->in VM Arguments we provide -Dserver.port=8888 and run.
+we can run the same eapplication in multiple port like this. -Dserver.port=6666
+-Dserver.port=9999
+
+http://laptop-ss1il408:3333/hi/welcome
+http://laptop-ss1il408:3333/hi/sayHi
+http://laptop-ss1il408:3333/hi/callToHello
+
+Through Zuul
+============
+http://laptop-ss1il408:4444/api/Hi/hi/welcome
+http://laptop-ss1il408:4444/api/Hi/hi/sayHi
+http://laptop-ss1il408:4444/api/Hi/hi/callToHello
+
+http://laptop-ss1il408:4444/api/Hello/hello/welcome
+http://laptop-ss1il408:4444/api/Hello/hello/sayHello

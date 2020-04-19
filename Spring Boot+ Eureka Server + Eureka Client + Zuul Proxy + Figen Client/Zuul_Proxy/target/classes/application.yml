@@ -1,0 +1,24 @@
+#Server Port Cfg
+server:
+  port: 4444
+  
+#Application Name cfg
+spring:
+  application:
+    name: zuul-proxy
+    
+#Client Cfg 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:1111/eureka/
+      
+zuul:
+  prefix: /api
+  routes:
+    Hi:
+     path: /Hi/**
+     service-id: hi-service
+    Hello:
+     path: /Hello/**
+     service-id: hello-service
