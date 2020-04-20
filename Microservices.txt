@@ -1,0 +1,284 @@
+                                                        Microservice
+                                                        ============
+1.What is Microservice?
+=======================
+->A microservice is a small, loosely coupled distributed service. Microservice Architectures evolved as a solution to the 
+  scalability and innovation challenges with Monolith architectures.It allows you to take a large application and decompose 
+  or break into easily manageable small components with narrowly defined responsibilities.
+->“While in a monolithic architecture the application is developed as a single unit,a microservices architecture works with
+  a set of small services which are executed independently and autonomously.”
+
+2.Difference Between Monolithic architecture and Microservices architecture
+===========================================================================
+                 Monolithic architecture                            Microservices architecture
+                 -----------------------                            --------------------------
+->Monolithic architecture is built as one large            ->Microservices architecture is built as small independent module
+  system and is usually one code-base.                       based on business functionality.
+->It is not easy to scale based on demand.                 ->It is easy to scale based on demand.
+->It has shared a single database.                         ->Each project and module has their own database.
+->Large code base makes IDE slow and build time            ->Each project is independent and small in size. So overall build
+  gets increase.                                             and development time gets decrease.
+->It extremely difficult to change technology or           ->Easy to change technology or framework because every module and
+  language or framework because everything is tightly        project is independent.
+  coupled and depend on each other.
+
+3.Advantages of Microservices
+=============================
+->In monolithic architecture for a large application, it is difficult to understand the complexity and make code changes 
+  fast and correctly,sometimes it becomes hard to manage the code.But in microservices application is broken into smaller
+  modules which are easy for developers to code and maintain.
+->By using microservices, new Technology & Process Adaption becomes easier. You can try new technologies with the newer
+  microservices that we use.
+->Each microservice can scale independently via X-axis scaling (cloning with more CPU or memory) and Z-axis scaling 
+  (sharding), based upon their needs.
+->In monolithic architecture for small change, the whole application needs to be built and deployed.But in microservices we 
+  need to built and deployed that the small microservice.
+->In microservices total applications remain unaffected by the failure of a single module.
+->Each microservices can be independently DURS (deployed, updated, replaced, and scaled).
+->In monolithic architecture the heavy application slows down start-up time.But in microservices it fast.
+->In monolithic architecture total applications need extensive manual testing to ensure the impact of changes.But in 
+  microservices we need to do testing that small microservice only.
+
+4.Disadvantages of Microservices
+================================
+->Time required to fragment different microservices.
+->Complexity of managing a large number of services.
+->Developer need to solve problems such as load balancing.
+->Complex testing over the distributed deployment.
+->Microservices are expensive also.
+->Deploying microservices can be complex.
+->Multiple databases and transaction management can be painful.
+
+5.What is Eureka Server?
+========================
+->The microservices should register themselves in the centralized location with an identifier and server details. 
+  This is known as “Service Registration“.  Each microservice should be able to look up the list of registered services in
+  the centralized location and it is known as “Service Discovery”.
+->There are multiple implementations for the Service Registration and Discovery Server.
+  Ex: Netflix Eureka,Consul, Zookeeper etc.
+->Eureka is the Netflix Service Discovery Server and Client.
+->Eureka Server is an application that holds the information about all client-service applications.Every Microservice will
+  register into the Eureka server and Eureka server knows all the client applications running on which port and IP address.
+  Eureka Server is also known as Service Discovery Server.
+->Eureka is a REST (Representational State Transfer).Mainly used in the cloud for locating services for the purpose of load
+  balancing and failover of middle-tier servers.It is a server where microservices can register themselves so others can 
+  discover them.
+->Eureka Server comes with the bundle of Spring Cloud. For this, we need to develop the Eureka server and run it on the
+  default port 8761.If we want change then,
+
+application.properties
+----------------------
+server.port=1111
+
+->In a Spring Boot Apllication  we need to add @EnableEurekaServer annotation. The @EnableEurekaServer annotation is used
+  to make your Spring Boot application acts as a Eureka Server.
+Ex:
+->The main method of spring boot app is
+
+@SpringBootApplication
+@EnableEurekaServer
+public class EurekaserverApplication {
+   public static void main(String[] args) {
+      SpringApplication.run(EurekaserverApplication.class, args);
+   }
+}
+
+Eureka server dependency in Spring Boot
+---------------------------------------
+<dependency>
+<groupId>org.springframework.cloud</groupId>
+   <artifactId>spring-cloud-starter-eureka-server</artifactId>
+</dependency>
+
+->By default every Eureka server is also a Eureka Client ,when it runs it not only provided registery it also trying to 
+  register with other Eureka Server.So You should add the below given configuration into your application.properties file 
+  or application.yml file for behave like only Eureka Server.
+
+application.properties file is given below −
+---------------------------------------------
+eureka.client.registerWithEureka = false
+eureka.client.fetchRegistry = false
+server.port = 8761
+
+6.What is Eureka Client?
+========================
+->When a client registers with Eureka, it provides meta-data about itself — such as host, port, health indicator URL, 
+  home page, and other details ,thus allowing for other microservices or Eureka Server to discover it.
+->In a Spring Boot Apllication  we need to add @EnableDiscoveryClient annotation. The @EnableDiscoveryClient annotation 
+  is used to make your Spring Boot application acts as a Eureka Client.
+->The service will be registered in the Eureka Server with name whatever we are provide in the application.properties file.
+  Ex: “student-service“. The other registered services will use this name as the service-id to access this service.
+
+eg:-
+ The main method of spring boot app is
+
+@SpringBootApplication
+@EnableDiscoveryClient
+public class HelloServiceApplication {
+   public static void main(String[] args) {
+      SpringApplication.run(HelloServiceApplication.class, args);
+   }
+}
+
+application.properties file is given below −
+---------------------------------------------
+#Application Name cfg
+spring.application.name= Hello-Service
+
+->we register it like a Eureka Client,by passing Eureka server URL.
+#Client Cfg   
+eureka.client.service-url.defaultZone= http://localhost:1111/eureka/
+
+Eureka server dependency in Spring Boot
+---------------------------------------
+<dependency>
+	<groupId>org.springframework.cloud</groupId>
+	<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+
+7.What's the difference between EnableEurekaClient and EnableDiscoveryClient?
+=============================================================================
+->Basically both are same.
+->There are multiple implementations of "Discovery Service" (eureka, consul, zookeeper). @EnableDiscoveryClient lives in 
+  spring-cloud-commons and picks the implementation on the classpath. @EnableEurekaClient lives in spring-cloud-netflix
+  and only works for eureka. If eureka is on your classpath, they are effectively the same.
+
+8.What is Zuul?
+===============
+->Zuul is the front door for all requests from devices and web sites to the backend of the Netflix streaming application. 
+  As an edge service application, Zuul is built to enable dynamic routing, monitoring, resiliency and security.
+->Zuul acts as an API gateway or Edge service. It receives all the requests coming from the UI and then delegates the 
+  requests to internal microservices. 
+->We have to create a brand new microservice which is Zuul-enabled, and this service sits on top of all other microservices.
+  It will register with a Eureka server and automatically set up dynamic routing based on other services that are also 
+  registered with Eureka to provide access to our APIs through one singular point.
+->In a Spring Boot Apllication  we need to add @EnableZuulProxy along with @EnableDiscoveryClient annotation. 
+  The @EnableZuulProxy and @EnableDiscoveryClient annotation is used to make your Spring Boot application acts as a 
+  API gateway or Edge service along with Eureka Client.
+
+eg:-
+ The main method of spring boot app is
+
+@SpringBootApplication
+@EnableZuulProxy
+@EnableDiscoveryClient
+public class ZuulProxyApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ZuulProxyApplication.class, args);
+	}
+
+}
+
+application.yml file is given below
+-----------------------------------
+->First we register it like a Eureka Client,by passing Eureka server URL.
+->If there is two microservices one is Hi and another is Hello,we have to configure in zuul by providing there URL path.
+#Application Name cfg
+spring:
+  application:
+    name: Zuul-Proxy
+    
+#Client Cfg   
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:1111/eureka
+      
+zuul:
+  prefix: /api
+  routes:
+      Hi:
+       path: /Hi/**
+       service-id: Hi-Service
+      Hello:
+       path: /Hello/**
+       service-id: Hello-Service
+
+Zuul dependency in Spring Boot
+------------------------------
+->We have to add Zuul dependency along with Eureka Client Dependency.
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+</dependency>
+
+server side Load Balancing with Zuul
+------------------------------------
+->Zuul, among many other things, fetches from Eureka service locations and does server-side load balancing.
+->When Zuul receives a request, it picks up one of the physical locations available and forwards requests to the actual 
+  service instance. The whole process of caching the location of the service instances and forwarding the request to the
+  actual location is provided out of the box with no additional configurations needed.
+->Internally, Zuul uses Netflix Ribbon to look up for all instances of the service from the service discovery(Eureka Server).
+
+9.Difference Between Microservices and Web Services?
+====================================================
+Web Service
+-----------
+->Web Service is a way to expose the functionality of an application to other application, without a user interface. 
+  It is a service which exposes an API over HTTP.
+->Web services are not tied to any one operating system or programming language. For example,an application developed in 
+  Java can communicate with the one developed in C#, Android, etc.
+->Web Service is a connection technology, a way to connect services together into a Service Oriented Architecture (SOA).
+
+Microservice
+------------
+->Microservice is independently deployable service modeled around a business domain. It is a method of breaking large 
+  software applications into loosely coupled modules, in which each service runs a unique process and communicates through
+  APIs.
+->Microservices are designed to cope with failure and breakdowns of large applications. Since multiple unique services 
+  are communicating together, it may happen that a particular service fails, but the overall larger applications remain 
+  unaffected by the failure of a single module.
+
+10.Traditional server side load balancing in monolithic architecture
+====================================================================
+->Server side load balancing is involved in monolithic applications where we have limited number of application instances 
+  behind the load balancer. we deploy our war/ear files into multiple application servers, then we create a pool of server
+  and put a load balancer (Netscaler) in front of it, which has a public IP. The client makes a request using that public IP,
+  and Netscaler decides in which internal application server it forwards the request by round robin or sticky session 
+  algorithm. We call it server side load balancing.
+->Problem: The problem of server side load balancing is if one or more servers stop responding, we have to manually remove
+  those servers from the load balancer by updating the IP table of the load balancer.
+  Another problem is that we have to implement a failover policy to provide the client with a seamless experience.
+  But microservices don't use server side load balancing. They use client side load balancing.
+
+11.Client side load balancing in microservice architecture
+==========================================================
+->To overcome the problems of traditional load balancing, client side load balancing came into picture. 
+->To understand client side load balancing, let's recap microservices architecture. We generally create a service discovery
+  like Eureka or Consul, where each service instance registers when bootstrapped. Eureka server maintains a service registry;
+  it maintains all the instances of the service as a key/value map, where the {service id} of your microservice serves as
+  the key and instances serve as the value. Now, if one microservice wants to communicate with another microservice, it 
+  generally looks up the service registry using DiscoveryClient and Eureka server returns all the instances of the calling
+  microservice to the caller service. Then it was a caller service headache which instance it calls. Here, client side load
+  balancing stepped in. Client side load balancing maintains an algorithm like round robin or zone specific, by which it can
+  invoke instances of calling services. The advantage is s service registry always updates itself; if one instance goes down,
+  it removes it from its registry, so when the client side load balancer talks to the Eureka server, it always updates 
+  itself, so there is no manual intervention- unlike server side load balancing- to remove an instance.
+->Another advantage is, as the load balancer is in the client side, you can control its load balancing algorithm 
+  programmatically. Ribbon provides this facility, so we will use Ribbon for client side load balancing.
+->We can do it by using Zuul Proxy.By default Zuul Proxy internally using Ribon. Zuul is encapsulating different instances 
+  of the same service: Internally, Zuul uses Netflix Ribbon to look up for all instances of the service from the service 
+  discovery (Eureka Server).
+
+Netflix ribbon – Client side load balancer
+------------------------------------------
+->Netflix ribbon from Spring Cloud family provides such facility to set up client side load balancing along with the service
+  registry component. Spring boot has very nice way of configuring ribbon client side load balancer with minimal effort.
+->It provides the following features
+ -Load balancing.
+ -Fault tolerance: Fault tolerance is the property that enables a system to continue operating properly in the event of the 
+                   failure of some of its components. For us, a component means anything: microservice, database(DB), 
+                   load balancer(LB) etc.
+ -Multiple protocol (HTTP, TCP, UDP) support in an asynchronous and reactive model.
+ -Caching and batching.
+
+<dependency>
+    <groupId>com.netflix.ribbon</groupId>
+    <artifactId>ribbon</artifactId>
+    <version>2.2.2</version>
+</dependency>
